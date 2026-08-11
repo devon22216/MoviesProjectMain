@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Directory</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background-color: #f4f6f9; 
+            color: #333; 
+        }
+        h1 { color: #1e293b; }
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-input {
+            padding: 10px 14px;
+            font-size: 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            width: 300px;
+        }
+        .search-btn {
+            padding: 10px 18px;
+            font-size: 16px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .search-btn:hover { background-color: #1d4ed8; }
+        .table-container { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        th, td { 
+            padding: 14px 18px; 
+            text-align: left; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        th { 
+            background-color: #0f172a; 
+            color: white; 
+            font-weight: 600; 
+        }
+        tr:hover { background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+    <h1>Movie Database</h1>
+    
+    <!-- Search Form -->
+    <form action="/" method="GET" class="search-container">
+        <input type="text" name="search" placeholder="Search movie by title..." value="{{ query or '' }}" class="search-input">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    {% if movies and movies|length > 0 %}
+                        {% for col in movies[0].keys() %}
+                            <th>{{ col | capitalize }}</th>
+                        {% endfor %}
+                    {% else %}
+                        <th>No Data Found</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                    <tr>
+                        {% for col in movie.keys() %}
+                            <td>{{ movie[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
