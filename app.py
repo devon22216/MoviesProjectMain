@@ -14,14 +14,26 @@ def home():
     conn = connect_db()
     
     if query:
-        # Filter movies where title contains search term
         movies = conn.execute("SELECT * FROM Movie WHERE Title LIKE ? LIMIT 50;", (f"%{query}%",)).fetchall()
     else:
-        # Default display of top 20 movies
         movies = conn.execute("SELECT * FROM Movie LIMIT 20;").fetchall()
         
+    # SQL Aggregate queries for stats box
+    stats = conn.execute("SELECT COUNT(*) as total, ROUND(AVG(Rating), 1) as avg_rating FROM Movie;").fetchone()
+    
     conn.close()
-    return render_template("index.html", movies=movies, query=query)
+    return render_template("index.html", movies=movies, query=query, stats=stats)
+
+@app.route("/top-rated")
+def top_rated():
+    conn = connect_db()
+    movies = conn.execute("SELECT * FROM Movie WHERE Rating >= 9.0 ORDER BY Rating DESC;").fetchall()
+    
+    # SQL Aggregate queries for stats box here too
+    stats = conn.execute("SELECT COUNT(*) as total, ROUND(AVG(Rating), 1) as avg_rating FROM Movie;").fetchone()
+    
+    conn.close()
+    return render_template("index.html", movies=movies, query="", stats=stats)
 
 if __name__ == "__main__":
     app.run(debug=True)
